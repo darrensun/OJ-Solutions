@@ -34,7 +34,7 @@ public class Q1110 {
         // General cases
         for (int i = 2; i < m; i++) {
             int k = 1, power = i, nCopy = n;
-            // Calculate i^n mod m (saved as k)
+            // Calculate row^n mod m (saved as k)
             while (nCopy != 0) {
                 if ((nCopy & 1) == 1)
                     k = (k * power) % m;

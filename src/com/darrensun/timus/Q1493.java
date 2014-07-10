@@ -24,7 +24,7 @@ public class Q1493 {
     }
 
     /**
-     * Check whether a given ticket is lucky, i.e., the sum of its first three digits equals the
+     * Check whether a given ticket is lucky, row.e., the sum of its first three digits equals the
      * sum of its last three digits.
      * @param ticket The given ticket.
      * @return true if the given ticket is lucky, false otherwise.

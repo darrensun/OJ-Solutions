@@ -29,7 +29,7 @@ public class Q1225 {
 //            return;
 //        }
 //        long m1 = 2, m2 = 2;    // may grow beyond the max of int type, say when n=45.
-//        for (int i = 3; i <= n; i++) {
+//        for (int row = 3; row <= n; row++) {
 //            long temp = m1 + m2;
 //            m1 = m2;
 //            m2 = temp;

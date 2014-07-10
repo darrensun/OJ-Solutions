@@ -27,10 +27,10 @@ public class Q1209 {
 //        Scanner in = new Scanner(System.in);
 //        PrintWriter out = new PrintWriter(System.out);
 //        int n = in.nextInt();
-//        for (int i = 0; i < n; i++) {
+//        for (int row = 0; row < n; row++) {
 //            int k = in.nextInt();
-//            for (int j = 1; k - j > 0; j++)
-//                k -= j;
+//            for (int column = 1; k - column > 0; column++)
+//                k -= column;
 //            out.print((k==1) ? 1 : 0);
 //            out.print(' ');
 //        }
