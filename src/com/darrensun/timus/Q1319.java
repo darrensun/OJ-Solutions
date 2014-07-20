@@ -16,11 +16,13 @@ public class Q1319 {
         n = in.nextInt();
         shelves = new int[n][n];
         int counter = 1;
+        // Right half
         for (int j = n-1; j >= 0; j--) {
             int k = j;
             for (int i = 0; k < n; i++, k++)
                 shelves[i][k] = counter++;
         }
+        // Left half
         for (int i = 1; i < n; i++) {
             int k = i;
             for (int j = 0; k < n; j++, k++)

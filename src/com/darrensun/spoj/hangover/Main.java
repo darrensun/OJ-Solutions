@@ -1,4 +1,4 @@
-package com.darrensun.spoj.handover;
+package com.darrensun.spoj.hangover;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -32,11 +32,17 @@ public class Q2005 {
     }
 
     public void findOptimalRoute() {
+        // Given the constraints, there are only four possible routes
         int[] route = new int[4];
+        // Route 1: 1 3 4 2 5
         route[0] = distances[1][3]+distances[3][4]+distances[4][2]+distances[2][5];
+        // Route 2: 1 4 3 2 5
         route[1] = distances[1][4]+distances[4][3]+distances[3][2]+distances[2][5];
+        // Route 3: 1 2 3 4 5
         route[2] = distances[1][2]+distances[2][3]+distances[3][4]+distances[4][5];
+        // Route 4: 1 3 2 4 5
         route[3] = distances[1][3]+distances[3][2]+distances[2][4]+distances[4][5];
+
         int optimalRoute = 0, shortestDistance = Integer.MAX_VALUE;
         for (int i = 0; i < 4; i++) {
             if (route[i] < shortestDistance) {
@@ -44,6 +50,7 @@ public class Q2005 {
                 optimalRoute = i;
             }
         }
+
         System.out.println(shortestDistance);
         switch (optimalRoute) {
             case 0 : System.out.println("1 3 4 2 5"); break;

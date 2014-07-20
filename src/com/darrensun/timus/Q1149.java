@@ -12,7 +12,7 @@ public class Q1149 {
         Scanner in = new Scanner(System.in);
         int n = in.nextInt();
 
-        // Generate a_i based on a_{row-1}, s_i based on s_{row-1} and a_{row}
+        // Generate a_i based on a_{i-1}, s_i based on s_{i-1} and a_{i}
         StringBuilder a_i = new StringBuilder("sin(1)");
         StringBuilder s_i = new StringBuilder("sin(1)+1");
         for (int i = 2; i <= n; i++) {

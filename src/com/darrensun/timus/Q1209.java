@@ -27,7 +27,7 @@ public class Q1209 {
 //        Scanner in = new Scanner(System.in);
 //        PrintWriter out = new PrintWriter(System.out);
 //        int n = in.nextInt();
-//        for (int row = 0; row < n; row++) {
+//        for (int i = 0; i < n; i++) {
 //            int k = in.nextInt();
 //            for (int column = 1; k - column > 0; column++)
 //                k -= column;

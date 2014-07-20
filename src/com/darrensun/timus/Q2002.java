@@ -13,10 +13,13 @@ import java.util.Map;
  */
 public class Q2002 {
 
+    /**
+     * A single account
+     */
     class Account {
         private String username;
         private String password;
-        private boolean loginStatus;
+        private boolean loginStatus;    // true if logged in, false if logged out
 
         public Account(String username, String password) {
             this.username = username;
@@ -50,13 +53,22 @@ public class Q2002 {
     public final static String ALREADY_LOGGED_OUT = "fail: already logged out";
     public final static String USER_LOGGED_OUT = "success: user logged out";
 
-    Map<String, Account> accounts = new HashMap<String, Account>();
+    Map<String, Account> accounts = new HashMap<String, Account>(); // All acccounts
     PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) {
-        Q20
+        Q2002 q2002 = new Q2002();
+        try {
+            q2002.run();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Read commands from standard input and execute them one by one.
+     * @throws IOException If the input format is incorrect.
+     */
     public void run() throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(in.readLine());
@@ -72,6 +84,11 @@ public class Q2002 {
         out.flush();
     }
 
+    /**
+     * Register a new account with given username and password.
+     * @param username The given username.
+     * @param password The given password.
+     */
     public void register(String username, String password) {
         if (accounts.containsKey(username))
             out.println(USER_EXISTS);
@@ -81,6 +98,11 @@ public class Q2002 {
         }
     }
 
+    /**
+     * Login an account with given username and password.
+     * @param username The given username.
+     * @param password The given password.
+     */
     public void login(String username, String password) {
         if (!accounts.containsKey(username)) {
             out.println(NO_SUCH_USER);
@@ -97,6 +119,10 @@ public class Q2002 {
         }
     }
 
+    /**
+     * Logout an account with given username.
+     * @param username The given username.
+     */
     public void logout(String username) {
         if (!accounts.containsKey(username)) {
             out.println(NO_SUCH_USER);

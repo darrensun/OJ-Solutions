@@ -17,9 +17,9 @@ public class Q1712 {
         int row;
         int column;
 
-        public Window(int i, int j) {
-            this.row = i;
-            this.column = j;
+        public Window(int row, int column) {
+            this.row = row;
+            this.column = column;
         }
     }
 

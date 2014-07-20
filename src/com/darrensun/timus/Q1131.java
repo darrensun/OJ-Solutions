@@ -25,9 +25,9 @@ public class Q1131 {
         }
 
         // r = n-2^m computers left;
-        // In the former case, r < 2^m, row.e., more computers with the program than those without
+        // In the former case, r < 2^m, i.e., more computers with the program than those without
         // the program. The only possible bottleneck is the number of cables.
-        // In the latter case, the number of cables is the bottlenect, row.e.,
+        // In the latter case, the number of cables is already the bottlenect, i.e.,
         // at most k computers can get a copy of the program within a minute after the m-th
         // minute.
         System.out.println(m + (n-(1<<m)+k-1)/k);
