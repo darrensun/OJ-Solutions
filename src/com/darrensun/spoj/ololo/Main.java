@@ -1,25 +1,27 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.ololo;
 
 import java.io.*;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 7742 - Onotole needs your help
+ * Created by Darren on 14-7-21.
+ * Using properties of XOR: x ^ x = 0
+ * BufferedReader and Integer.parseInt() is not fast enough to get AC given the time limit.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out, true);
 
-    public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
-        }
-        out.println(count);
+    public static void main(String[] args) throws Exception {
+        new Main().run();
+    }
+
+    void run() throws Exception {
+        int n = in.nextInt();
+        int singleNumber = 0;
+        while (n-- > 0)
+            singleNumber ^= in.nextInt();
+        out.println(singleNumber);
     }
 
     /**

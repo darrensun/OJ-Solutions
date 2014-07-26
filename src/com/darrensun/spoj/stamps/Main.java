@@ -10,6 +10,8 @@ import java.util.StringTokenizer;
 /**
  * SPOJ 3375 - Stamps
  * Created by Darren on 14-7-17.
+ * Solved by a greedy algorithm.
+ * Always borrow from a friend with the most stamps every time.
  */
 public class Main {
 
@@ -27,7 +29,7 @@ public class Main {
             for (int i = 0; i < friends; i++)
                 offers[i] = Integer.parseInt(tokenizer.nextToken());
 
-            Arrays.sort(offers);    // Always select a friend with the most every time
+            Arrays.sort(offers);
 
             out.printf("Scenario #%d:\n", t + 1);
             for (int i = friends-1; i >= 0; i--) {

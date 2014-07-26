@@ -1,25 +1,47 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.dotaa;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 10286 - DOTA HEROES
+ * Created by Darren on 14-7-26.
+ * Just sum the number of attacks each hero can bear without sacrificing himself,
+ * and see if the sum is larger or equal to the number of towers.
  */
 public class Main {
+    Parser in = new Parser(System.in);  // Use parser to ease the handling of the input
+    PrintWriter out = new PrintWriter(new BufferedOutputStream(System.out));
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    void run() throws IOException {
+        int testcases = in.nextInt();
+        while (testcases-- > 0) {
+            solve();
         }
-        out.println(count);
+        out.flush();
+    }
+
+    void solve() throws IOException {
+        int n = in.nextInt();
+        int m = in.nextInt();
+        int d = in.nextInt();
+
+        // Sum the number of attacks each hero can bear
+        int sum = 0;
+        for (int i = 0; i < n; i++)
+            sum += (in.nextInt()-1) / d;
+
+        // See if the sum is larger or equal to the number of towers
+        if (sum >= m)
+            out.println("YES");
+        else
+            out.println("NO");
     }
 
     /**

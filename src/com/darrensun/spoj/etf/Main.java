@@ -1,32 +1,55 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.etf;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 4141 - Euler Totient Function
+ * Created by Darren on 14-7-22.
+ * Euler's totient function: phi(n) = n * (1-1/p_1) * ... * (1-1/p_k)
+ * The judge is unfriendly to Java solutions due to the stringent time limit. The same idea with
+ * C/C++ can get accepted.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(new BufferedOutputStream(System.out));
 
-    public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+    public static void main(String[] args) throws Exception {
+        new Main().run();
+    }
+
+    void run() throws Exception {
+        int testcases = in.nextInt();
+        while (testcases-- > 0)
+            out.println(eulerTotientFunction(in.nextInt()));
+        out.flush();
+    }
+
+    /**
+     * Calculate Euler's totient function of a given integer.
+     * @param n the given integer
+     * @return the value of the Euler's totient function of n.
+     */
+    int eulerTotientFunction(int n) {
+        int result = n;
+        for (int i = 2; i <= n/i; i++) {
+            if (n % i == 0)
+                result -= result / i;
+            while (n % i == 0)
+                n /= i;
         }
-        out.println(count);
+        if (n > 1)
+            result -= result / n;
+        return result;
     }
 
     /**
      * A fast parser taking in an InputStream, with self-maintained buffer
      */
     static class Parser {
-        final private int BUFFER_SIZE = 65536;  // 2^16, a good compromise for some problems
+        final private int BUFFER_SIZE = 1 << 20;  // 2^16, a good compromise for some problems
         private InputStream din;    // Underlying input stream
         private byte[] buffer;      // Self-maintained buffer
         private int bufferPointer;  // Current read position in the buffer
