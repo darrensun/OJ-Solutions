@@ -1,32 +1,65 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.neg2;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 739 - The Moronic Cowmpouter
+ * Created by Darren on 14-7-29.
+ * Increment residual n by one whenever a mismatch of signs happen.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out, true);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    void run() throws IOException {
+        int n = in.nextInt();
+        if (n == 0)
+            out.println(0);
+        else {
+            List<Integer> digits = new ArrayList<Integer>();
+            boolean flag = false;
+
+            if (n < 0) {
+                n = -n;
+                flag = true;
+            }
+
+            while (n > 0) {
+                digits.add(n & 1);
+                if (flag) {  // Mismatch of signs
+                    if (n == 1) {   // Already the last step
+                        digits.add(1);
+                        break;
+                    }
+                    if ((n&1) == 1) // Add one to one higher position to correct the mismatch
+                        n++;
+                }
+                n >>= 1;
+                flag = !flag;
+            }
+            print(digits);
         }
-        out.println(count);
+    }
+
+    void print(List<Integer> list) {
+        for (int i = list.size()-1; i >= 0; i--)
+            out.print(list.get(i));
+        out.println();
     }
 
     /**
      * A fast parser taking in an InputStream, with self-maintained buffer
      */
     static class Parser {
-        final private int BUFFER_SIZE = 65536;  // 2^16, a good compromise for some problems
+        final private int BUFFER_SIZE = 20;
         private InputStream din;    // Underlying input stream
         private byte[] buffer;      // Self-maintained buffer
         private int bufferPointer;  // Current read position in the buffer
@@ -41,7 +74,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

@@ -1,79 +1,97 @@
-package com.darrensun.spoj.aibohp;
+package com.darrensun.spoj.buglife;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
+import java.util.*;
 
 /**
- * SPOJ 1021 - Aibohphobia
- * Created by Darren on 14-7-26.
- * Solved by DP with O(n^2) time and O(3*6100) space.
- * dp(i,j) = minimum characters inserted to make s[i...j] a palindrome
- * dp(i,j) =
- *  1. dp(i+1,j-1), if s[i] == s[j], or
- *  2. min{ dp(i+1,j)+1, dp(i,j-1)+1 }, if s[i] != s[j]
- * Note:
- *  1. Use char array instead of calling the charAt() method to retrieve each character.
- *  2. Declare the dp table as static for space reuse.
- *  3. Modulo operations are costly.
- * The problem can also be approached using the following idea: The minimum number of characters
- * inserted is equal to the difference between the length of the string and its
- * longest palindrome subsequence. The latter can be computed using the DP solution for the longest
- * common subsequence between the original string and its reverse string.
- * Proper implementation of the above idea can further make the solution with O(n^2) time and
- * O(2*6100) space.
+ * SPOJ 3377 - A Bug’s Life
+ * Created by Darren on 14-8-6.
+ * Solved by DFS.
+ * The idea is to find if there is any cycle of odd length.
  */
 public class Main {
     Parser in = new Parser(System.in);
     PrintWriter out = new PrintWriter(System.out);
+    static final String SCENARIO = "Scenario #%d:\n";
+    static final String FOUND = "Suspicious bugs found!";
+    static final String NOT_FOUND = "No suspicious bugs found!";
 
     public static void main(String[] args) throws IOException {
         new Main().run();
     }
 
-    private static short[][] dp = new short[3][6100];   // Space reuse for all test cases
-
     void run() throws IOException {
         int testcases = in.nextInt();
-        while (testcases-- > 0) {
-            String str = in.readLine();
-            solve(str.toCharArray());
-        }
+        for (int i = 1; i <= testcases; i++)
+            solve(i);
         out.flush();
     }
 
-    void solve(char[] str) {    // chatAt() method is slow when the string is long
-        int n = str.length;
+    private static int n, m;
+    private static boolean[][] graph = new boolean[2001][2001]; // Static for space reuse
+    private static byte[] sex = new byte[2001];
 
-        Arrays.fill(dp[0], 0, n, (short)0);    // dp(i,i-1)
-        Arrays.fill(dp[1], 0, n, (short)0);    // dp(i,i)
+    void solve(int testcase) throws IOException {
+        constructGraph();
+        out.printf(SCENARIO, testcase);
 
-        // Used (costly) mod to compute row, lastRow, and lastLastRow earlier, leading to TLEs
-        int row = 2, lastRow = 1, lastLastRow = 0;
-
-        for (short d = 1; d < n; d++) {
-            for (short i = 0; i < n-d; i++) {
-                if (str[i] == str[i+d])   // dp(i,j) where j = i+d
-                    dp[row][i] = dp[lastLastRow][i+1];
-                else
-                    dp[row][i] = (dp[lastRow][i] < dp[lastRow][i+1]) ?
-                            (short)(dp[lastRow][i]+1) :
-                            (short)(dp[lastRow][i+1]+1);
+        boolean status = true;  // true if no homosexual interaction is found
+        for (int i = 1; status && i <= n; i++) {    // Jump out of the loop as long as status=false
+            if (sex[i] == 0) {
+                sex[i] = 1;
+                status = dfs(i);
             }
-            lastLastRow = lastRow;
-            lastRow = row;
-            row = (row == 2) ? 0 : row+1;
         }
 
-        out.println(dp[lastRow][0]);
+        if (status)
+            out.println(NOT_FOUND);
+        else
+            out.println(FOUND);
+    }
+
+    // Construct a graph based on the input
+    void constructGraph() throws IOException {
+        n = in.nextInt();
+        m = in.nextInt();
+
+        // Initialize graph[][] and sex[]
+        for (int i = 1; i <= n; i++)
+            Arrays.fill(graph[i], 1, n+1, false);
+        Arrays.fill(sex, 1, n+1, (byte)0);
+
+        // Read edges
+        int u, v;
+        for (int j = 0; j < m; j++) {
+            u = in.nextInt();
+            v = in.nextInt();
+            graph[u][v] = graph[v][u] = true;
+        }
+    }
+
+    // DFS traversal whose return value indicates whether a cycle of odd length (i.e., containing
+    // a homosexual interaction) has been found (false -> found).
+    boolean dfs(int u) {
+        for (int v = 1; v <= n; v++) {
+            if (!graph[u][v])   // Consider adjacent vertices only
+                continue;
+            if (sex[v] == 0) {  // New vertex
+                sex[v] = (byte)-sex[u];     // Assigned the opposite sex as u's
+                if (!dfs(v))    // Terminate as long as a homosexual interaction has been found
+                    return false;
+            } else if (sex[v]+sex[u] != 0) {    // Interaction between homosexual bugs
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
      * A fast parser taking in an InputStream, with self-maintained buffer
      */
     static class Parser {
-        final private int BUFFER_SIZE = 1 << 16;  // 2^16, a good compromise for some problems
+        final private int BUFFER_SIZE = 65536;  // 2^16, a good compromise for some problems
         private InputStream din;    // Underlying input stream
         private byte[] buffer;      // Self-maintained buffer
         private int bufferPointer;  // Current read position in the buffer

@@ -1,25 +1,42 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.enigmath;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 15965 - PLAY WITH MATH
+ * Created by Darren on 14-7-31.
+ * (b/gcd, a/gcd) is the solution.
+ * Try to prove that (x,y) is a solution if and only if it is a multiple of (b/gcd, a/gcd).
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    void run() throws IOException {
+        int testcases = in.nextInt();
+        while (testcases-- > 0)
+            solve(in.nextInt(), in.nextInt());
+        out.flush();
+    }
+
+    void solve(int a, int b) {
+        int gcd = gcd(a, b);
+        out.printf("%d %d\n", b/gcd, a/gcd);
+    }
+
+    int gcd(int a, int b) {
+        while (b != 0) {
+            int r = a % b;
+            a = b;
+            b = r;
         }
-        out.println(count);
+        return a;
     }
 
     /**
@@ -41,7 +58,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

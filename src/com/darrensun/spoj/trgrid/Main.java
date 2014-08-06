@@ -1,25 +1,44 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.trgrid;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 5976 - Traversing Grid
+ * Created by Darren on 14-7-31.
+ * Move direction: outside-in
+ * Each time the cells on the outer boundary have been traversed, we essentially repeat the same
+ * process for a grid of smaller size, i.e., (n-2)*(m-2) if n>2 and m>2.
+ * So just try on the grids one of whose dimensions is smaller than or equal to 2.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    void run() throws IOException {
+        int testcases = in.nextInt();
+        while (testcases-- > 0)
+            solve(in.nextInt(), in.nextInt());
+        out.flush();
+    }
+
+    void solve(int n, int m) {
+        if (n <= m) {
+            if ((n&1) == 1)
+                out.println('R');
+            else
+                out.println('L');
+        } else {
+            if ((m&1) == 1)
+                out.println('D');
+            else
+                out.println('U');
         }
-        out.println(count);
     }
 
     /**
@@ -41,7 +60,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

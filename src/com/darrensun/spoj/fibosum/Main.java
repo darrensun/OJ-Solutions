@@ -1,79 +1,79 @@
-package com.darrensun.spoj.aibohp;
+package com.darrensun.spoj.fibosum;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 
 /**
- * SPOJ 1021 - Aibohphobia
- * Created by Darren on 14-7-26.
- * Solved by DP with O(n^2) time and O(3*6100) space.
- * dp(i,j) = minimum characters inserted to make s[i...j] a palindrome
- * dp(i,j) =
- *  1. dp(i+1,j-1), if s[i] == s[j], or
- *  2. min{ dp(i+1,j)+1, dp(i,j-1)+1 }, if s[i] != s[j]
- * Note:
- *  1. Use char array instead of calling the charAt() method to retrieve each character.
- *  2. Declare the dp table as static for space reuse.
- *  3. Modulo operations are costly.
- * The problem can also be approached using the following idea: The minimum number of characters
- * inserted is equal to the difference between the length of the string and its
- * longest palindrome subsequence. The latter can be computed using the DP solution for the longest
- * common subsequence between the original string and its reverse string.
- * Proper implementation of the above idea can further make the solution with O(n^2) time and
- * O(2*6100) space.
+ * SPOJ 8001 - Fibonacci Sum
+ * Created by Darren on 14-8-1.
+ * Solved with O(max{logn, logm}) time
+ * The basic idea is to use the fact that the sum of the first n-th Fibonacci numbers is the
+ * (n+2)-th number minus one.
+ * Actual Fibonacci numbers are not necessary; we can apply modulo operation in each step to avoid
+ * extremely large numbers.
  */
 public class Main {
     Parser in = new Parser(System.in);
     PrintWriter out = new PrintWriter(System.out);
+    public final static int MODULOS = 1000000007;
 
     public static void main(String[] args) throws IOException {
         new Main().run();
     }
 
-    private static short[][] dp = new short[3][6100];   // Space reuse for all test cases
-
     void run() throws IOException {
         int testcases = in.nextInt();
-        while (testcases-- > 0) {
-            String str = in.readLine();
-            solve(str.toCharArray());
-        }
+        while (testcases-- > 0)
+            solve(in.nextInt(), in.nextInt());
         out.flush();
     }
 
-    void solve(char[] str) {    // chatAt() method is slow when the string is long
-        int n = str.length;
+    void solve(int n, int m) {
+        long sum1 = pow(n+1), sum2 = pow(m+2);
+        out.println((sum2-sum1+MODULOS) % MODULOS); // Add MODULOS before the modulo operation
+    }
 
-        Arrays.fill(dp[0], 0, n, (short)0);    // dp(i,i-1)
-        Arrays.fill(dp[1], 0, n, (short)0);    // dp(i,i)
+    private static long[][] temp = new long[2][2];  // For space reuse
 
-        // Used (costly) mod to compute row, lastRow, and lastLastRow earlier, leading to TLEs
-        int row = 2, lastRow = 1, lastLastRow = 0;
+    // Calculate the n-th fibonacci number modulo MODULOS with O(logn) time
+    long pow(int n) {
+        long[][] matrix = new long[][] {{1, 0}, {0, 1}}, power = new long[][] {{1, 1}, {1, 0}};
 
-        for (short d = 1; d < n; d++) {
-            for (short i = 0; i < n-d; i++) {
-                if (str[i] == str[i+d])   // dp(i,j) where j = i+d
-                    dp[row][i] = dp[lastLastRow][i+1];
-                else
-                    dp[row][i] = (dp[lastRow][i] < dp[lastRow][i+1]) ?
-                            (short)(dp[lastRow][i]+1) :
-                            (short)(dp[lastRow][i+1]+1);
+        while (n != 0) {
+            if ((n&1) == 1) {
+                // Calculate matrix * power
+                temp[0][0] = (matrix[0][0]*power[0][0] + matrix[0][1]*power[1][0]) % MODULOS;
+                temp[0][1] = (matrix[0][0]*power[0][1] + matrix[0][1]*power[1][1]) % MODULOS;
+                temp[1][0] = (matrix[1][0]*power[0][0] + matrix[1][1]*power[1][0]) % MODULOS;
+                temp[1][1] = (matrix[1][0]*power[0][1] + matrix[1][1]*power[1][1]) % MODULOS;
+                matrix[0][0] = temp[0][0];
+                matrix[0][1] = temp[0][1];
+                matrix[1][0] = temp[1][0];
+                matrix[1][1] = temp[1][1];
             }
-            lastLastRow = lastRow;
-            lastRow = row;
-            row = (row == 2) ? 0 : row+1;
+
+            // power = power * power
+            temp[0][0] = (power[0][0]*power[0][0] + power[0][1]*power[1][0]) % MODULOS;
+            temp[0][1] = (power[0][0]*power[0][1] + power[0][1]*power[1][1]) % MODULOS;
+            temp[1][0] = (power[1][0]*power[0][0] + power[1][1]*power[1][0]) % MODULOS;
+            temp[1][1] = (power[1][0]*power[0][1] + power[1][1]*power[1][1]) % MODULOS;
+            power[0][0] = temp[0][0];
+            power[0][1] = temp[0][1];
+            power[1][0] = temp[1][0];
+            power[1][1] = temp[1][1];
+
+            n /= 2;
         }
 
-        out.println(dp[lastRow][0]);
+        return matrix[0][1]-1;
     }
 
     /**
      * A fast parser taking in an InputStream, with self-maintained buffer
      */
     static class Parser {
-        final private int BUFFER_SIZE = 1 << 16;  // 2^16, a good compromise for some problems
+        final private int BUFFER_SIZE = 65536;  // 2^16, a good compromise for some problems
         private InputStream din;    // Underlying input stream
         private byte[] buffer;      // Self-maintained buffer
         private int bufferPointer;  // Current read position in the buffer

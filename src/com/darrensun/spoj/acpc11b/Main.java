@@ -1,25 +1,62 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.acpc11b;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 10239 - Between the Mountains
+ * Created by Darren on 14-7-29.
+ * Solved by presorting.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    void run() throws IOException {
+        int testcases = in.nextInt();
+        while (testcases-- > 0) {
+            solve();
         }
-        out.println(count);
+        out.flush();
+    }
+
+    private static int[] alt1 = new int[1000];
+    private static int[] alt2 = new int[1000];
+
+    void solve() throws IOException {
+        // Read altitudes of the two mountains
+        int m = in.nextInt();
+        for (int i = 0; i < m; i++)
+            alt1[i] = in.nextInt();
+        int n = in.nextInt();
+        for (int i = 0; i < n; i++)
+            alt2[i] = in.nextInt();
+
+        // Sort the altitudes of the mountains, individually
+        Arrays.sort(alt1, 0, m);
+        Arrays.sort(alt2, 0, n);
+
+        // Find their minimum difference
+        int minDifference = Integer.MAX_VALUE;
+        int i = 0, j = 0;
+        while (i < m && j < n) {
+            if (minDifference > Math.abs(alt1[i]-alt2[j]))
+                minDifference = Math.abs(alt1[i]-alt2[j]);
+            if (alt1[i] == alt2[j]) // minDifference = 0, the least possible already
+                break;
+            if (alt1[i] < alt2[j])
+                i++;
+            else
+                j++;
+        }
+
+        out.println(minDifference);
     }
 
     /**
@@ -41,7 +78,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

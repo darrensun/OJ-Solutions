@@ -1,32 +1,56 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.major;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 6171 - Majority
+ * Created by Darren on 14-7-27.
+ * Count the number of appearances for each number, and keep track of the number with the most
+ * appearances.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    void run() throws IOException {
+        int testcases = in.nextInt();
+        while (testcases-- > 0)
+            solve();
+        out.flush();
+    }
+
+    private static int[] data = new int[2010];
+
+    void solve() throws IOException {
+        int n = in.nextInt();
+        Arrays.fill(data, 0);
+        int mostTimes = 0, numberOfMostTimes = -1;
+        for (int i = 0; i < n; i++) {
+            int x = in.nextInt();
+            data[x+1000]++;
+            if (data[x+1000] > mostTimes) {
+                mostTimes = data[x+1000];
+                numberOfMostTimes = x;
+            }
         }
-        out.println(count);
+        if (mostTimes > n/2)
+            out.printf("YES %d\n", numberOfMostTimes);
+        else
+            out.println("NO");
     }
 
     /**
      * A fast parser taking in an InputStream, with self-maintained buffer
      */
     static class Parser {
-        final private int BUFFER_SIZE = 65536;  // 2^16, a good compromise for some problems
+        final private int BUFFER_SIZE = 1 << 16;  // 2^16, a good compromise for some problems
         private InputStream din;    // Underlying input stream
         private byte[] buffer;      // Self-maintained buffer
         private int bufferPointer;  // Current read position in the buffer
@@ -41,7 +65,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

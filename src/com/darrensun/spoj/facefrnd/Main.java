@@ -1,25 +1,44 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.facefrnd;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 9788 - Friends of Friends
+ * Created by Darren on 14-7-29.
+ * Use sets to maintain friends, and friends of friends.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    void run() throws IOException {
+        int n = in.nextInt();
+        Set<Integer> friends = new HashSet<Integer>(),  // Set of IDs of friends
+                friendsOfFriends = new HashSet<Integer>();  // Set of IDs of friends of friends
+
+        for (int i = 0; i < n; i++) {
+            int friendID = in.nextInt();
+            friends.add(friendID);      // A friend
+            if (friendsOfFriends.contains(friendID))
+                friendsOfFriends.remove(friendID);  // Not just a friend of friends
+            int m = in.nextInt();
+            for (int j = 0; j < m; j++) {
+                int id = in.nextInt();
+                if (!friends.contains(id))  // Not a friend, but a friend of friends
+                    friendsOfFriends.add(id);
+            }
         }
-        out.println(count);
+
+        out.print(friendsOfFriends.size());
+        out.flush();
     }
 
     /**
@@ -41,7 +60,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

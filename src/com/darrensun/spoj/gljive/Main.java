@@ -1,25 +1,37 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.gljive;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 8319 - GLJIVE
+ * Created by Darren on 14-7-29.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out, true);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    public final static int TARGET = 100;
+
+    void run() throws IOException {
+        int sum = 0;
+        for (int i = 0; i < 10; i++) {
+            int points = in.nextInt();
+            // Pick the mushroonm if the total point is closer to the target
+            if (sum+points-TARGET <= TARGET-sum) {
+                sum += points;
+                if (sum >= TARGET)
+                    break;
+            } else {
+                break;
+            }
         }
-        out.println(count);
+        out.println(sum);
     }
 
     /**
@@ -41,7 +53,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

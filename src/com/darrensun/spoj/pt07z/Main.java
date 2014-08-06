@@ -135,60 +135,60 @@ public class Main {
 //        out.println(lengthOfLongestPath(edges, source));
 //        out.flush();
 //    }
-
-    /**
-     * Find by BFS the vertex that is farthest from vertex 1 by BFS.
-     * @param edges Adjacency list presentation of the tree.
-     * @return The vertex that is farthest from vertex 1.
-     */
-    int bfsSearch(List<Set<Integer>> edges) {
-        boolean[] visited = new boolean[edges.size()];
-        Deque<Integer> queue = new ArrayDeque<Integer>();
-        visited[1] = true;
-        queue.offer(1);
-        int lastVertex = 0;
-        while (queue.peek() != null) {
-            int u = queue.poll();
-            lastVertex = u;
-            for (int v : edges.get(u)) {
-                if (!visited[v]) {
-                    visited[v] = true;
-                    queue.offer(v);
-                }
-            }
-        }
-        return lastVertex;
-    }
-
-    /**
-     * Find by BFS the length of the longest path starting with a given vertex.
-     * @param edges Adjacency list presentation of the tree.
-     * @param source The given vertex.
-     * @return The length of the longest path starting with the given vertex.
-     */
-    int lengthOfLongestPath(List<Set<Integer>> edges, int source) {
-        Deque<Integer> queue = new ArrayDeque<Integer>();
-        queue.offer(source);
-        int length = -1;
-        int verticesInThisLevel = 1, verticesInNextLevel = 0;
-        while (queue.peek() != null) {
-            int u = queue.poll();
-            verticesInThisLevel--;
-            for (Iterator<Integer> iterator = edges.get(u).iterator(); iterator.hasNext(); ) {
-                int v = iterator.next();
-                queue.offer(v);
-                verticesInNextLevel++;
-                iterator.remove();
-                edges.get(v).remove(u);
-            }
-            if (verticesInThisLevel == 0) {
-                verticesInThisLevel = verticesInNextLevel;
-                verticesInNextLevel = 0;
-                length++;
-            }
-        }
-        return length;
-    }
+//
+//    /**
+//     * Find by BFS the vertex that is farthest from vertex 1 by BFS.
+//     * @param edges Adjacency list presentation of the tree.
+//     * @return The vertex that is farthest from vertex 1.
+//     */
+//    int bfsSearch(List<Set<Integer>> edges) {
+//        boolean[] visited = new boolean[edges.size()];
+//        Deque<Integer> queue = new ArrayDeque<Integer>();
+//        visited[1] = true;
+//        queue.offer(1);
+//        int lastVertex = 0;
+//        while (queue.peek() != null) {
+//            int u = queue.poll();
+//            lastVertex = u;
+//            for (int v : edges.get(u)) {
+//                if (!visited[v]) {
+//                    visited[v] = true;
+//                    queue.offer(v);
+//                }
+//            }
+//        }
+//        return lastVertex;
+//    }
+//
+//    /**
+//     * Find by BFS the length of the longest path starting with a given vertex.
+//     * @param edges Adjacency list presentation of the tree.
+//     * @param source The given vertex.
+//     * @return The length of the longest path starting with the given vertex.
+//     */
+//    int lengthOfLongestPath(List<Set<Integer>> edges, int source) {
+//        Deque<Integer> queue = new ArrayDeque<Integer>();
+//        queue.offer(source);
+//        int length = -1;
+//        int verticesInThisLevel = 1, verticesInNextLevel = 0;
+//        while (queue.peek() != null) {
+//            int u = queue.poll();
+//            verticesInThisLevel--;
+//            for (Iterator<Integer> iterator = edges.get(u).iterator(); iterator.hasNext(); ) {
+//                int v = iterator.next();
+//                queue.offer(v);
+//                verticesInNextLevel++;
+//                iterator.remove();
+//                edges.get(v).remove(u);
+//            }
+//            if (verticesInThisLevel == 0) {
+//                verticesInThisLevel = verticesInNextLevel;
+//                verticesInNextLevel = 0;
+//                length++;
+//            }
+//        }
+//        return length;
+//    }
 
     public static void main(String[] args) throws Exception {
         new Main().run();

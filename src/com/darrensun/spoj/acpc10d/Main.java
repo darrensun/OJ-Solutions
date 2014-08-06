@@ -1,25 +1,54 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.acpc10d;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 7975 - Tri graphs
+ * Created by Darren on 14-8-6.
+ * Solved by DP with O(n) time and O(1) space.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    private int n;
+
+    void run() throws IOException {
+        int testcase = 1;
+        while ((n = in.nextInt()) > 0)
+            solve(testcase++);
+        out.flush();
+    }
+
+    void solve(int testcase) throws IOException {
+        int[][] vertices = new int[2][3];
+        // Get the value of the top-middle vertex
+        in.nextInt();
+        vertices[0][0] = Integer.MAX_VALUE;
+        vertices[0][1] = in.nextInt();
+        vertices[0][2] = vertices[0][1] + in.nextInt();
+
+        // Main body of DP; note the flow directions
+        int row = 1;
+        int temp1, temp2;
+        for (int i = 0; i < n-1; i++) {
+            temp1 = Math.min(vertices[row^1][0], vertices[row^1][1]);
+            temp2 = Math.min(vertices[row^1][1], vertices[row^1][2]);
+            vertices[row][0] = temp1 + in.nextInt();
+            vertices[row][1] = Math.min(vertices[row][0], Math.min(temp1, temp2)) + in.nextInt();
+            vertices[row][2] = Math.min(vertices[row][1], temp2) + in.nextInt();
+            row ^= 1;
         }
-        out.println(count);
+
+        out.print(testcase);
+        out.print(". ");
+        out.println(vertices[row^1][1]);
     }
 
     /**
@@ -41,7 +70,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

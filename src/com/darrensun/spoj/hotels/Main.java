@@ -1,25 +1,48 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.hotels;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 9861 - Hotels Along the Croatian Coast
+ * Created by Darren on 14-8-4.
+ * Solved by a local-global greedy algorithm, with O(n) time and O(1) extra space.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out, true);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    private int n, m;
+    private int[] values;
+
+    void run() throws IOException {
+        n = in.nextInt();
+        m = in.nextInt();
+        values = new int[n];
+        for (int i = 0; i < n; i++)
+            values[i] = in.nextInt();
+
+        int globalMax = 0;
+        long localMax = 0;  // Possible to overflow with int
+        int left = 0, right = 0;
+        while (right < n) {
+            // Update local maximum
+            localMax += values[right++];
+            while (localMax > m && left < right)
+                localMax -= values[left++];
+            // Update global maximum
+            globalMax = (globalMax < localMax) ? (int)localMax : globalMax;
+            if (globalMax == m) {   // The best possible outcome we can achieve
+                out.println(globalMax);
+                return;
+            }
         }
-        out.println(count);
+        out.println(globalMax);
     }
 
     /**
@@ -41,7 +64,7 @@ public class Main {
         /**
          * Read the next integer from the input stream.
          * @return The next integer.
-         * @throws IOException
+         * @throws java.io.IOException
          */
         public int nextInt() throws IOException {
             int result = 0;

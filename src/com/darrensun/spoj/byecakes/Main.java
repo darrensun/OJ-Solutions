@@ -1,25 +1,48 @@
-package com.darrensun.spoj.intest;
+package com.darrensun.spoj.byecakes;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 
 /**
- * SPOJ 450 - Enormous Input Test
- * Created by Darren on 14-7-17.
- * Implement a parser given an input stream.
+ * SPOJ 7185 - Bye Bye Cakes
+ * Created by Darren on 14-8-3.
  */
 public class Main {
+    Parser in = new Parser(System.in);
+    PrintWriter out = new PrintWriter(System.out);
 
     public static void main(String[] args) throws IOException {
-        Parser in = new Parser(System.in);
-        PrintWriter out = new PrintWriter(System.out, true);
-        int n = in.nextInt(), k = in.nextInt();
-        int count = 0;
-        while (n-- > 0) {
-            int t = in.nextInt();
-            if (t % k == 0)
-                count++;
+        new Main().run();
+    }
+
+    private static int[] has = new int[4];
+    private static int[] needed = new int[4];
+
+    void run() throws IOException {
+        while (true) {
+            for (int i = 0; i < 4; i++)
+                has[i] = in.nextInt();
+            for (int i = 0; i < 4; i++)
+                needed[i] = in.nextInt();
+            if (has[0] < 0)
+                break;
+            solve();
         }
-        out.println(count);
+        out.flush();
+    }
+
+    void solve() {
+        int maxmin = 0;
+        for (int i = 0; i < 4; i++) {
+            int amount = (has[i]+needed[i]-1) / needed[i];
+            maxmin = (maxmin < amount) ? amount : maxmin;
+        }
+        for (int i = 0; i < 4; i++) {
+            out.print(maxmin*needed[i]-has[i]);
+            out.print(' ');
+        }
+        out.println();
     }
 
     /**
@@ -92,4 +115,5 @@ public class Main {
                 buffer[0] = -1;
         }
     }
+
 }
